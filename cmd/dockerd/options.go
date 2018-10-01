@@ -29,12 +29,17 @@ var (
 	dockerTLSVerify = os.Getenv("DOCKER_TLS_VERIFY") != ""
 )
 
+// 守护进程选项
 type daemonOptions struct {
+	// 配置文件
 	configFile   string
+	// 守护进程配置
 	daemonConfig *config.Config
 	flags        *pflag.FlagSet
 	Debug        bool
+	// 主机列表
 	Hosts        []string
+	// 日志级别
 	LogLevel     string
 	TLS          bool
 	TLSVerify    bool
@@ -42,6 +47,7 @@ type daemonOptions struct {
 }
 
 // newDaemonOptions returns a new daemonFlags
+// 返回一个新的守护进程选项
 func newDaemonOptions(config *config.Config) *daemonOptions {
 	return &daemonOptions{
 		daemonConfig: config,
@@ -55,6 +61,7 @@ func (o *daemonOptions) InstallFlags(flags *pflag.FlagSet) {
 	}
 
 	flags.BoolVarP(&o.Debug, "debug", "D", false, "Enable debug mode")
+	// 日志级别(info)
 	flags.StringVarP(&o.LogLevel, "log-level", "l", "info", `Set the logging level ("debug"|"info"|"warn"|"error"|"fatal")`)
 	flags.BoolVar(&o.TLS, "tls", false, "Use TLS; implied by --tlsverify")
 	flags.BoolVar(&o.TLSVerify, FlagTLSVerify, dockerTLSVerify, "Use TLS and verify the remote")
