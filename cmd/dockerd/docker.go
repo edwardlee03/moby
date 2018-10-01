@@ -15,26 +15,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// 新的守护进程命令
 func newDaemonCommand() *cobra.Command {
+	// 新的守护进程选项
 	opts := newDaemonOptions(config.New())
 
 	cmd := &cobra.Command{
 		Use:           "dockerd [OPTIONS]",
-		Short:         "A self-sufficient runtime for containers.",
+		Short:         "A self-sufficient runtime for containers/容器的自足运行时环境.",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Args:          cli.NoArgs,
+		// Run函数
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.flags = cmd.Flags()
+			// 运行守护进程
 			return runDaemon(opts)
 		},
 		DisableFlagsInUseLine: true,
 		Version:               fmt.Sprintf("%s, build %s", dockerversion.Version, dockerversion.GitCommit),
 	}
+	// 为根命令设置默认用法，帮助和错误处理
 	cli.SetupRootCommand(cmd)
 
 	flags := cmd.Flags()
+	// docker version
 	flags.BoolP("version", "v", false, "Print version information and quit")
+	// 守护进程配置文件
 	flags.StringVar(&opts.configFile, "config-file", defaultDaemonConfigFile, "Daemon configuration file")
 	opts.InstallFlags(flags)
 	installConfigFlags(opts.daemonConfig, flags)
@@ -49,12 +56,16 @@ func init() {
 	}
 }
 
+/**
+ * 启动入口
+ */
 func main() {
 	if reexec.Init() {
 		return
 	}
 
 	// Set terminal emulation based on platform as required.
+	// 基于平台设置终端仿真
 	_, stdout, stderr := term.StdStreams()
 
 	// @jhowardmsft - maybe there is a historic reason why on non-Windows, stderr is used
@@ -65,6 +76,7 @@ func main() {
 		logrus.SetOutput(stderr)
 	}
 
+	// 新的守护进程命令
 	cmd := newDaemonCommand()
 	cmd.SetOutput(stdout)
 	if err := cmd.Execute(); err != nil {
