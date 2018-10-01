@@ -10,6 +10,7 @@ import (
 var registeredInitializers = make(map[string]func())
 
 // Register adds an initialization func under the specified name
+// 在指定的名称下添加初始化函数
 func Register(name string, initializer func()) {
 	if _, exists := registeredInitializers[name]; exists {
 		panic(fmt.Sprintf("reexec func already registered under name %q", name))
@@ -20,6 +21,7 @@ func Register(name string, initializer func()) {
 
 // Init is called as the first part of the exec process and returns true if an
 // initialization function was called.
+// Init 作为exec进程的第一部分被调用
 func Init() bool {
 	initializer, exists := registeredInitializers[os.Args[0]]
 	if exists {

@@ -57,15 +57,16 @@ func init() {
 }
 
 /**
- * 启动入口
+ * dockerd进程启动入口
  */
 func main() {
+  // 1. 作为exec进程的第一部分被调用
 	if reexec.Init() {
 		return
 	}
 
 	// Set terminal emulation based on platform as required.
-	// 基于平台设置终端仿真
+	// 2. 基于平台设置终端仿真
 	_, stdout, stderr := term.StdStreams()
 
 	// @jhowardmsft - maybe there is a historic reason why on non-Windows, stderr is used
@@ -76,9 +77,11 @@ func main() {
 		logrus.SetOutput(stderr)
 	}
 
-	// 新的守护进程命令
+	// 3. 新的守护进程命令
 	cmd := newDaemonCommand()
+	// 4. 设置标准输出
 	cmd.SetOutput(stdout)
+	// 5. 执行命令
 	if err := cmd.Execute(); err != nil {
 		fmt.Fprintf(stderr, "%s\n", err)
 		os.Exit(1)
