@@ -47,7 +47,7 @@ type daemonOptions struct {
 }
 
 // newDaemonOptions returns a new daemonFlags
-// 返回一个新的守护进程选项
+// 返回一个新的守护进程选项实例
 func newDaemonOptions(config *config.Config) *daemonOptions {
 	return &daemonOptions{
 		daemonConfig: config,

@@ -17,7 +17,7 @@ import (
 
 // 新的守护进程命令
 func newDaemonCommand() *cobra.Command {
-	// 新的守护进程选项
+	// 1. 新的守护进程选项
 	opts := newDaemonOptions(config.New())
 
 	cmd := &cobra.Command{
